@@ -14,4 +14,4 @@ class Excelcsvator
   end
 end
 
-require 'excelcsvator_ext'
+require 'excelcsvator_ext/excelcsvator_ext'
