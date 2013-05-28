@@ -135,7 +135,8 @@ static void output_string(const char *string, VALUE buffer) {
   rb_str_append(buffer, rb_str_new2(result));
   for (str = string; *str; str++) {
     if (*str == stringSeparator) {
-      asprintf(&result, "%c%c", stringSeparator, stringSeparator);
+      // asprintf(&result, "%c%c", stringSeparator, stringSeparator);
+      asprintf(&result, " ");
       rb_str_append(buffer, rb_str_new2(result));
     } else if (*str == '\\') {
       asprintf(&result, "\\\\");
