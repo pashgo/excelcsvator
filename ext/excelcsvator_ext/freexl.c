@@ -70,11 +70,11 @@ extern const char *locale_charset (void);
 #endif
 #endif
 
-#if defined(_WIN32) && !defined(__MINGW32__)
-#include "config-msvc.h"
-#else
-#include "config.h"
-#endif
+// #if defined(_WIN32) && !defined(__MINGW32__)
+// #include "config-msvc.h"
+// #else
+// #include "config.h"
+// #endif
 
 #include "freexl.h"
 #include "freexl_internals.h"
