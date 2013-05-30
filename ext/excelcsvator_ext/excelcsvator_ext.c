@@ -199,7 +199,7 @@ static char *print_csv_int(int number){
 
 static char *print_csv_double(double number){
   char *result;
-  asprintf(&result, "%1.12f", number);
+  asprintf(&result, "%1.12g", number);
   return result;
 }
 
