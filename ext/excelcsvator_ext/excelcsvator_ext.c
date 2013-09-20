@@ -10,9 +10,9 @@ static char *sheetSeparator = "\f";
 static char *fieldSeparator = ",";
 
 static VALUE method_to_c_csv(VALUE self);
-static char *print_csv_int(int number);
-static char *print_csv_double(double number);
-static char *print_csv_string(const char *string);
+static VALUE print_csv_int(int number);
+static VALUE print_csv_double(double number);
+static VALUE print_csv_string(const char *string);
 
 void Init_excelcsvator_ext(void) {
   VALUE Excelcsvator, ExcelcsvatorExt;
@@ -142,11 +142,11 @@ static VALUE method_to_c_csv(VALUE self){
 
         switch (cell.type) {
           case FREEXL_CELL_INT:
-            rb_str_append(buffer, rb_str_new2(print_csv_int(cell.value.int_value)));
+            rb_str_append(buffer, print_csv_int(cell.value.int_value));
             // printf (", %d", cell.value.int_value);
             break;
           case FREEXL_CELL_DOUBLE:
-            rb_str_append(buffer, rb_str_new2(print_csv_double(cell.value.double_value)));
+            rb_str_append(buffer, print_csv_double(cell.value.double_value));
             // printf (", %1.12f", cell.value.double_value);
             break;
           case FREEXL_CELL_TEXT:
@@ -155,7 +155,7 @@ static VALUE method_to_c_csv(VALUE self){
           case FREEXL_CELL_DATETIME:
           case FREEXL_CELL_TIME:
             // print_sql_string(cell.value.text_value);
-            rb_str_append(buffer, rb_str_new2(print_csv_string(cell.value.text_value)));
+            rb_str_append(buffer, print_csv_string(cell.value.text_value));
             break;
           // case FREEXL_CELL_DATE:
           // case FREEXL_CELL_DATETIME:
@@ -165,7 +165,7 @@ static VALUE method_to_c_csv(VALUE self){
           //   break;
           case FREEXL_CELL_NULL:
           default:
-            rb_str_append(buffer, rb_str_new2(print_csv_string("")));
+            rb_str_append(buffer, print_csv_string(""));
             // printf (", NULL");
             break;
         };
@@ -191,38 +191,58 @@ static VALUE method_to_c_csv(VALUE self){
     return buffer;
 }
 
-static char *print_csv_int(int number){
+static VALUE print_csv_int(int number){
+  VALUE str = rb_str_new2("");
   char *result;
   asprintf(&result, "%d", number);
-  return result;
+  str = rb_str_new2(result);
+  free(result);
+  return str;
 }
 
-static char *print_csv_double(double number){
+static VALUE print_csv_double(double number){
+  VALUE str = rb_str_new2("");
   char *result;
   asprintf(&result, "%1.12g", number);
-  return result;
+  str = rb_str_new2(result);
+  free(result);
+  return str;
 }
 
-static char *print_csv_string(const char *string) {
-  char *result = "";
-  const char *p = string;
-
+static VALUE print_csv_string(const char *string) {
+  VALUE str = rb_str_new2("");
+  char *result;
+  // const char *p = string;
+  
   asprintf(&result, "%s%c", result, stringSeparator);
+  rb_str_append(str, rb_str_new2(result));
+  free(result);
   // putchar (stringSeparator);
-  while (*p != '\0') {
-    if (*p == stringSeparator) {
+  while (*string != '\0') {
+    if (*string == stringSeparator) {
       asprintf(&result, "%s%c%c", result, stringSeparator, stringSeparator);
-    } else if (*p == '\n') {
+      rb_str_append(str, rb_str_new2(result));
+      free(result);
+    } else if (*string == '\n') {
       asprintf(&result, "%s%c", result, ' ');
-    } else if (*p == '\\') {
+      rb_str_append(str, rb_str_new2(result));
+      free(result);
+    } else if (*string == '\\') {
       asprintf(&result, "%s%s", result, "\\\\");
+      rb_str_append(str, rb_str_new2(result));
+      free(result);
     } else {
-      asprintf(&result, "%s%c", result, *p);
+      asprintf(&result, "%s%c", result, *string);
+      rb_str_append(str, rb_str_new2(result));
+      free(result);
     }
-    p++;
+    string++;
   }
   asprintf(&result, "%s%c", result, stringSeparator);
+  rb_str_append(str, rb_str_new2(result));
+  free(result);
   // putchar (stringSeparator);
-
-  return result;
+  // str = rb_str_new2(result);
+  // free(result);
+  return str;
 }
