@@ -214,31 +214,31 @@ static VALUE print_csv_string(const char *string) {
   char *result;
   // const char *p = string;
   
-  asprintf(&result, "%s%c", result, stringSeparator);
+  asprintf(&result, "%c", stringSeparator);
   rb_str_append(str, rb_str_new2(result));
   free(result);
   // putchar (stringSeparator);
   while (*string != '\0') {
     if (*string == stringSeparator) {
-      asprintf(&result, "%s%c%c", result, stringSeparator, stringSeparator);
+      asprintf(&result, "%c%c", stringSeparator, stringSeparator);
       rb_str_append(str, rb_str_new2(result));
       free(result);
     } else if (*string == '\n') {
-      asprintf(&result, "%s%c", result, ' ');
+      asprintf(&result, "%c", ' ');
       rb_str_append(str, rb_str_new2(result));
       free(result);
     } else if (*string == '\\') {
-      asprintf(&result, "%s%s", result, "\\\\");
+      asprintf(&result, "%s", "\\\\");
       rb_str_append(str, rb_str_new2(result));
       free(result);
     } else {
-      asprintf(&result, "%s%c", result, *string);
+      asprintf(&result, "%c", *string);
       rb_str_append(str, rb_str_new2(result));
       free(result);
     }
     string++;
   }
-  asprintf(&result, "%s%c", result, stringSeparator);
+  asprintf(&result, "%c", stringSeparator);
   rb_str_append(str, rb_str_new2(result));
   free(result);
   // putchar (stringSeparator);
