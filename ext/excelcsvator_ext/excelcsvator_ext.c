@@ -4,7 +4,7 @@
 #include <string.h>
 #include <freexl.h>
 
-static char  stringSeparator = '\"';
+static char *stringSeparator = "\"";
 static char *lineSeparator = "\n";
 static char *sheetSeparator = "\f";
 static char *fieldSeparator = ",";
@@ -101,8 +101,10 @@ static VALUE method_to_c_csv(VALUE self){
       goto stop;
     }
 
-    rb_str_append(buffer, rb_str_new2(utf8_worsheet_name));
-    rb_str_append(buffer, rb_str_new2(lineSeparator));
+    // rb_str_append(buffer, rb_str_new2(utf8_worsheet_name));
+    // rb_str_append(buffer, rb_str_new2(lineSeparator));
+    rb_str_cat2(buffer, utf8_worsheet_name);
+    rb_str_cat2(buffer, lineSeparator);
     // printf ("--\n-- creating a DB table\n");
     // printf ("-- extracting data from Worksheet #%u: %s\n--\n", worksheet_index, utf8_worsheet_name);
     // printf ("CREATE TABLE %s (\n", table_name);
@@ -118,7 +120,8 @@ static VALUE method_to_c_csv(VALUE self){
       int isFirstCol = 1;
 
       if (!isFirstLine) {
-        rb_str_append(buffer, rb_str_new2(lineSeparator));
+        rb_str_cat2(buffer, lineSeparator);
+        // rb_str_append(buffer, rb_str_new2(lineSeparator));
       } else {
         isFirstLine = 0;
       }
@@ -135,7 +138,8 @@ static VALUE method_to_c_csv(VALUE self){
         }
         
         if (!isFirstCol) {
-          rb_str_append(buffer, rb_str_new2(fieldSeparator));
+          rb_str_cat2(buffer, fieldSeparator);
+          // rb_str_append(buffer, rb_str_new2(fieldSeparator));
         } else {
           isFirstCol = 0;
         }
@@ -174,8 +178,10 @@ static VALUE method_to_c_csv(VALUE self){
     }
 
     if (worksheet_index < max_worksheet - 1){
-      rb_str_append(buffer, rb_str_new2(lineSeparator));
-      rb_str_append(buffer, rb_str_new2(sheetSeparator));
+      rb_str_cat2(buffer, lineSeparator);
+      rb_str_cat2(buffer, sheetSeparator);
+      // rb_str_append(buffer, rb_str_new2(lineSeparator));
+      // rb_str_append(buffer, rb_str_new2(sheetSeparator));
     }
     // printf ("\n-- done: table end\n\n\n\n");
   }
@@ -211,36 +217,44 @@ static VALUE print_csv_double(double number){
 
 static VALUE print_csv_string(const char *string) {
   VALUE str = rb_str_new2("");
-  char *result;
+  // char *result;
   // const char *p = string;
   
-  asprintf(&result, "%c", stringSeparator);
-  rb_str_append(str, rb_str_new2(result));
-  free(result);
+  rb_str_cat2(str, stringSeparator);
+  // asprintf(&result, "%c", stringSeparator);
+  // rb_str_append(str, rb_str_new2(result));
+  // free(result);
   // putchar (stringSeparator);
   while (*string != '\0') {
-    if (*string == stringSeparator) {
-      asprintf(&result, "%c%c", stringSeparator, stringSeparator);
-      rb_str_append(str, rb_str_new2(result));
-      free(result);
+    if (*string == *stringSeparator) {
+      rb_str_cat2(str, stringSeparator);
+      rb_str_cat2(str, stringSeparator);
+      // asprintf(&result, "%c%c", stringSeparator, stringSeparator);
+      // rb_str_append(str, rb_str_new2(result));
+      // free(result);
     } else if (*string == '\n') {
-      asprintf(&result, "%c", ' ');
-      rb_str_append(str, rb_str_new2(result));
-      free(result);
+      rb_str_cat2(str, " ");
+      // asprintf(&result, "%c", ' ');
+      // rb_str_append(str, rb_str_new2(result));
+      // free(result);
     } else if (*string == '\\') {
-      asprintf(&result, "%s", "\\\\");
-      rb_str_append(str, rb_str_new2(result));
-      free(result);
+      rb_str_cat2(str, "\\\\");
+      // asprintf(&result, "%s", "\\\\");
+      // rb_str_append(str, rb_str_new2(result));
+      // free(result);
     } else {
-      asprintf(&result, "%c", *string);
-      rb_str_append(str, rb_str_new2(result));
-      free(result);
+      rb_str_cat(str, string, 1);
+      // asprintf(&result, "%c", *string);
+      // rb_str_append(str, rb_str_new2(result));
+      // free(result);
     }
     string++;
   }
-  asprintf(&result, "%c", stringSeparator);
-  rb_str_append(str, rb_str_new2(result));
-  free(result);
+  rb_str_cat2(str, stringSeparator);
+  // asprintf(&result, "%c", stringSeparator);
+  // rb_str_append(str, rb_str_new2(result));
+  // free(result);
+
   // putchar (stringSeparator);
   // str = rb_str_new2(result);
   // free(result);
