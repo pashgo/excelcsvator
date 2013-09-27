@@ -103,7 +103,6 @@ static VALUE method_to_c_csv(VALUE self){
 
     // rb_str_append(buffer, rb_str_new2(utf8_worsheet_name));
     // rb_str_append(buffer, rb_str_new2(lineSeparator));
-    rb_str_cat2(buffer, sheetSeparator);
     rb_str_cat2(buffer, utf8_worsheet_name);
     rb_str_cat2(buffer, lineSeparator);
     // printf ("--\n-- creating a DB table\n");
@@ -180,7 +179,7 @@ static VALUE method_to_c_csv(VALUE self){
 
     if (worksheet_index < max_worksheet - 1){
       rb_str_cat2(buffer, lineSeparator);
-      // rb_str_cat2(buffer, sheetSeparator);
+      rb_str_cat2(buffer, sheetSeparator);
       // rb_str_append(buffer, rb_str_new2(lineSeparator));
       // rb_str_append(buffer, rb_str_new2(sheetSeparator));
     }
