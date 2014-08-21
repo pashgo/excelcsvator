@@ -2916,6 +2916,8 @@ parse_biff_record (biff_workbook * workbook, int swap)
 	  switch (workbook->record_type)
 	    {
 	    case BIFF_BOF:	/* BIFF5 or BIFF8 */
+      case 0x023e:
+      case 0x00ec:
 		workbook->ok_bof = 1;
 		memcpy (word16.bytes, workbook->record + 2, 2);
 		if (swap)
