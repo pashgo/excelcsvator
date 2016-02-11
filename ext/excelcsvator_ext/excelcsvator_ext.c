@@ -238,7 +238,7 @@ static VALUE print_csv_string(const char *string) {
       // rb_str_append(str, rb_str_new2(result));
       // free(result);
     } else if (*string == '\\') {
-      rb_str_cat2(str, "\\\\");
+      rb_str_cat2(str, "\\");
       // asprintf(&result, "%s", "\\\\");
       // rb_str_append(str, rb_str_new2(result));
       // free(result);
